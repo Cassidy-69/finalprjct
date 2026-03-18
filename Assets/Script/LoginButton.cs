@@ -1,5 +1,7 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LoginButton : MonoBehaviour
 {
@@ -7,6 +9,12 @@ public class LoginButton : MonoBehaviour
     public TMP_InputField passwordInput;
     public BlurredCaptcha captchaManager;
     public TMP_Text messageText;
+    public Button bacMainMenu;
+
+    public void backMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 
     public void OnLoginClicked()
     {
@@ -30,5 +38,6 @@ public class LoginButton : MonoBehaviour
 
         messageText.text = "Login successful";
         Debug.Log("LOGIN SUCCESS");
+        bacMainMenu.gameObject.SetActive(true);
     }
 }

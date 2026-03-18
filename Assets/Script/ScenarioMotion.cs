@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ScenarioMotion : MonoBehaviour
 {
@@ -7,14 +9,23 @@ public class ScenarioMotion : MonoBehaviour
     public TMPro.TextMeshProUGUI messageText;
 
     [Header("References")]
-    public Transform player;        // orang
-    public Transform wheelchair;    // wheelchair
+    public Transform player;        
+    public Transform wheelchair;    
 
     [Header("Positions")]
     public Vector3 playerStartPos = new Vector3(-3.29099989f, 0f, -0.720000029f);
     public Vector3 wheelchairTargetPos = new Vector3(-3.47000003f, 0.0872218758f, -5.78999996f);
 
     public float moveSpeed = 1.5f;
+    public ScenarioManager scenarioManager;
+
+    public Button back;
+    public Button backMenu;
+
+    public void BackToChoices()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 
     public void ChooseStand()
     {
@@ -26,19 +37,22 @@ public class ScenarioMotion : MonoBehaviour
     {
         animator.SetTrigger("Fallen");
         ShowMessage("Trying to stand caused a dangerous fall.\nSimple actions can become life-threatening.");
+        back.gameObject.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void ChooseWheelchair()
     {
         animator.SetTrigger("Wheelchair");
 
-        // teleport player ke posisi awal
+       
         player.position = playerStartPos;
 
-        // parent player ke wheelchair supaya ikut jalan
+       
         player.SetParent(wheelchair);
 
-        // mulai gerakin wheelchair
+       
         StartCoroutine(MoveWheelchair());
 
         Invoke(nameof(WheelchairFail), 4f);
@@ -57,10 +71,10 @@ public class ScenarioMotion : MonoBehaviour
             yield return null;
         }
 
-        // pastikan posisi presisi
+        
         wheelchair.position = wheelchairTargetPos;
 
-        // balik ke idle
+        
         animator.ResetTrigger("Wheelchair");
         animator.SetTrigger("Idle");
     }
@@ -68,8 +82,11 @@ public class ScenarioMotion : MonoBehaviour
 
     void WheelchairFail()
     {
-        player.SetParent(null); // lepas dari wheelchair
+        player.SetParent(null); 
         ShowMessage("Even with a wheelchair, reaching simple things isn’t guaranteed.\nAccessibility isn’t universal.");
+        back.gameObject.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
 
@@ -79,15 +96,27 @@ public class ScenarioMotion : MonoBehaviour
         Invoke(nameof(HelpResult), 3f);
     }
 
+    public void GoToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
     void HelpResult()
     {
         ShowMessage("Asking for help shouldn’t feel shameful.\nBut many face judgment instead of support.");
+        back.gameObject.SetActive(false);
+        backMenu.gameObject.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
-    // Hidden option
+    
     public void ChooseGrabber()
     {
         ShowMessage("Adaptive tools help, but they’re not perfect.\nAccessibility requires more than tools.");
+        back.gameObject.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     void ShowMessage(string msg)

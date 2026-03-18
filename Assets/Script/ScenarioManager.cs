@@ -18,6 +18,12 @@ public class ScenarioManager : MonoBehaviour
         choiceUI.SetActive(true);          
     }
 
+    public void ShowChoicesAgain()
+    {
+        cameraController.SetCamera(false);
+        choiceUI.SetActive(true);
+    }
+
     public void OnChoiceSelected()
     {
         choiceUI.SetActive(false);
